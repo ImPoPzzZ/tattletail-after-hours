@@ -1,0 +1,49 @@
+# Build output
+bin/
+obj/
+
+# Local tool settings
+
+# Not part of the mod
+drivers/
+Tattletail Endless/
+*.zip
+*.lnk
+
+# Unused audio (not referenced by any code)
+Music/
+Announcer/
+
+# Promo art and scans kept outside the repo
+/*.jpg
+/*.png
+/*.pdf
+
+# The installer's build inputs/outputs (made by tools/installer/make_installer.py)
+tools/installer/payload.zip
+tools/installer/installer.ico
+*.exe
+
+# Raw CC0 texture packs (tools/factory_textures.py turns them into assets/factory)
+tools/assets/
+
+# The secret Recalled's saves are signed with: never commit it (see src/RecalledSecret.cs.example)
+src/RecalledSecret.cs
+
+# Test output (maps drawn by tools/recalled_test)
+tools/recalled_test/out/
+tools/recalled_test/bin/
+tools/recalled_test/obj/
+# Recalled's music: the source mp3s and the converted wavs (about 55 MB) ship in the zip, not in git
+/*.mp3
+Sounds/rc_*.wav
+tools/ilscan/bin/
+tools/ilscan/obj/
+history/
+
+# auto-update tools: build output and the release folder (the signing key is NOT in the repo: it lives in %USERPROFILE%\.after_hours_keys)
+tools/updater/bin/
+tools/updater/obj/
+tools/update_test/bin/
+tools/update_test/obj/
+release_out/

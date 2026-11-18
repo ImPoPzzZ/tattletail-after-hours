@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!-- Headless checks for Recalled: compiles the mod's pure files (no Unity) against tiny stand-ins and tests the data,
+       the character, the save file and the town (is everywhere reachable? do gates seal?). It also draws the town
+       top-down. To run it: dotnet run -c Release out   (the .ppm maps land in out/) -->
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net10.0</TargetFramework><Nullable>disable</Nullable><ImplicitUsings>disable</ImplicitUsings><NoWarn>CS0649;CS0169;SYSLIB0022;SYSLIB0021</NoWarn></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\RecalledRules.cs" />
+    <Compile Include="..\..\src\RecalledData.cs" />
+    <Compile Include="..\..\src\RecalledWorlds.cs" />
+    <Compile Include="..\..\src\RecalledChar.cs" />
+    <Compile Include="..\..\src\RecalledTown.cs" />
+    <Compile Include="..\..\src\RecalledProps.cs" />
+    <Compile Include="..\..\src\RecalledGuide.cs" />
+    <Compile Include="..\..\src\RecalledNotices.cs" />
+    <Compile Include="..\..\src\RecalledSave.cs" />
+    <Compile Include="..\..\src\RecalledSecret.cs" />
+  </ItemGroup>
+</Project>

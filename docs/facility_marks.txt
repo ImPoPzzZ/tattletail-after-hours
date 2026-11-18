@@ -1,0 +1,48 @@
+PROP 'fridge' at local (6.19, 33.03) height 0.78 facing 39
+REMOVED 'fridge' (ignore its earlier line)
+PROP 'fridge' at local (10.09, 38.92) height 0.01 facing 223
+PROP 'fridge' at local (33.11, 29.53) height 0.01 facing 275
+PROP 'fridge' at local (47.72, 22.91) height 0.01 facing 280
+REMOVED 'fridge' (ignore its earlier line)
+PROP 'brush' at local (33.54, 23.31) height 0.01 facing 260
+PROP 'brush' at local (6.73, 13.06) height 0.01 facing 70
+PROP 'charger tattletail' at local (30.89, 8.76) height -3.99 facing 178
+PROP 'vase' at local (4.65, 24.40) height -3.99 facing 31
+PROP 'vase' at local (13.47, 19.35) height 0.01 facing 238
+PROP 'vase' at local (40.61, 1.82) height 0.01 facing 233
+PROP 'vase' at local (37.47, 9.00) height -3.99 facing 165
+PROP 'vase' at local (3.74, 35.05) height 4.01 facing 176
+PROP 'vase' at local (12.82, 21.33) height 4.01 facing 312
+PROP 'charger tattletail' at local (8.21, 24.88) height 4.01 facing 142
+PROP 'fridge' at local (0.58, 39.13) height 4.01 facing 156
+PROP 'groom tattletail' at local (3.48, 36.54) height 4.78 facing 43
+PROP 'candle' at local (8.08, 19.16) height 0.01 facing 116
+PROP 'candle' at local (6.42, 33.19) height 0.78 facing 29
+PROP 'candle' at local (30.24, 29.86) height 0.01 facing 275
+PROP 'candle' at local (31.36, 23.34) height 0.01 facing 332
+PROP 'candle' at local (30.84, 5.83) height -3.99 facing 184
+PROP 'friend' at local (36.15, 6.56) height 0.01 facing 304
+PROP 'friend' at local (27.39, 8.33) height 0.01 facing 90
+PROP 'friend' at local (5.75, 9.01) height 0.01 facing 48
+PROP 'tape' at local (30.86, 17.60) height 0.97 facing 271
+PROP 'tape' at local (39.51, 11.19) height 0.01 facing 320
+PROP 'tape' at local (48.39, 22.13) height 0.01 facing 94
+PROP 'tape' at local (44.52, 31.55) height 0.01 facing 208
+PROP 'tape' at local (57.81, 25.81) height 0.01 facing 249
+PROP 'washing machine' at local (41.15, 18.55) height 0.01 facing 298
+PROP 'washing machine' at local (31.26, 4.45) height 0.01 facing 41
+PROP 'washing machine' at local (6.62, 38.96) height 0.01 facing 144
+PROP 'speaker' at local (17.70, 38.75) height 0.01 facing 254
+PROP 'speaker' at local (20.41, 5.54) height 0.01 facing 118
+PROP 'speaker' at local (13.39, 10.68) height 0.01 facing 319
+PROP 'fuse box' at local (0.50, 17.73) height 0.19 facing 86
+PROP 'coin' at local (17.38, 33.82) height 0.01 facing 282
+PROP 'coin' at local (23.13, 29.00) height 0.01 facing 317
+PROP 'coin' at local (25.32, 22.31) height 0.01 facing 338
+PROP 'coin' at local (25.47, 16.22) height 0.01 facing 7
+PROP 'coin' at local (23.52, 7.61) height 0.01 facing 271
+PROP 'coin' at local (2.90, 27.21) height 4.01 facing 257
+PROP 'coin' at local (2.57, 31.68) height 4.01 facing 149
+PROP 'coin' at local (14.79, 26.77) height 4.01 facing 194
+PROP 'coin' at local (14.89, 11.83) height 4.01 facing 3
+PROP 'phone' at local (8.41, 0.10) height 1.12 facing 353

@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The one-click installer: "Install Tattletail After Hours.exe". Built by make_installer.py,
+       which first packs the release files into payload.zip (embedded below). .NET Framework 4.8
+       ships with Windows 10/11, so the exe runs anywhere without installing anything. -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>Install Tattletail After Hours</AssemblyName>
+    <RootNamespace>AfterHoursInstaller</RootNamespace>
+    <LangVersion>latest</LangVersion>
+    <ApplicationIcon>installer.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>4.0.0</Version>
+    <Product>Tattletail: After Hours Installer</Product>
+    <Company>ImPoPzzZ</Company>
+    <Description>Installs Tattletail: After Hours, a free fan mod for Tattletail.</Description>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <EmbeddedResource Include="payload.zip" LogicalName="payload.zip" />
+    <EmbeddedResource Include="logo.png" LogicalName="logo.png" />
+  </ItemGroup>
+
+</Project>

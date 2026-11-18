@@ -1,0 +1,103 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <AssemblyName>KaleidoscopeEndless</AssemblyName>
+    <RootNamespace>KaleidoscopeEndless</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+
+    <!--
+      ══════════════════════════════════════════════════════════════════
+      EDIT THESE TWO PATHS before building.
+
+      GameRoot  = folder that contains tattletailWindows.exe
+      ManagedDir = GameRoot\tattletailWindows_Data\Managed
+      ══════════════════════════════════════════════════════════════════
+    -->
+    <GameRoot>D:\SteamLibrary\steamapps\common\Tattletail</GameRoot>
+    <ManagedDir>$(GameRoot)\tattletailWindows_Data\Managed</ManagedDir>
+    <BepInExCore>$(GameRoot)\BepInEx\core</BepInExCore>
+    <PluginsDir>$(GameRoot)\BepInEx\plugins\KaleidoscopeEndless</PluginsDir>
+  </PropertyGroup>
+
+  <!-- ── BepInEx ──────────────────────────────────────────────────────── -->
+  <ItemGroup>
+    <Reference Include="BepInEx">
+      <HintPath>$(BepInExCore)\BepInEx.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="0Harmony">
+      <HintPath>$(BepInExCore)\0Harmony.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- ── Game assemblies ──────────────────────────────────────────────── -->
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ManagedDir)\Assembly-CSharp.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <!-- Steamworks.NET types (SteamMatchmaking/SteamNetworking/CSteamID/etc.)
+         ship free inside the base game's own firstpass assembly — the game
+         already calls SteamAPI.Init() itself (SteamManager), we just read
+         its already-initialized API surface. -->
+    <Reference Include="Assembly-CSharp-firstpass">
+      <HintPath>$(ManagedDir)\Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <HintPath>$(ManagedDir)\UnityEngine.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(ManagedDir)\UnityEngine.UI.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+
+  <!-- ── The Versus kid model (built by tools/kid_model.py) ─────────── -->
+  <ItemGroup>
+    <EmbeddedResource Include="assets\kid_boy.bin" LogicalName="kid_boy.bin" />
+    <EmbeddedResource Include="assets\kid_girl.bin" LogicalName="kid_girl.bin" />
+    <EmbeddedResource Include="assets\kid_dez.bin" LogicalName="kid_dez.bin" />
+    <EmbeddedResource Include="assets\kid_kaz.bin" LogicalName="kid_kaz.bin" />
+    <EmbeddedResource Include="assets\kid_rat.bin" LogicalName="kid_rat.bin" />
+    <EmbeddedResource Include="assets\kid_plague.bin" LogicalName="kid_plague.bin" />
+    <EmbeddedResource Include="assets\kid_fish.bin" LogicalName="kid_fish.bin" />
+    <EmbeddedResource Include="assets\creator_kit.bin" LogicalName="creator_kit.bin" />
+    <EmbeddedResource Include="assets\factory\*.jpg;assets\factory\*.png" LogicalName="factory_%(Filename)%(Extension)" />
+    <EmbeddedResource Include="assets\pinball\*.jpg" LogicalName="pinball_%(Filename)%(Extension)" />
+    <EmbeddedResource Include="assets\airhockey\*.jpg" LogicalName="airhockey_%(Filename)%(Extension)" />
+  </ItemGroup>
+
+  <!-- ── tools/ holds separate programs (the installer): not part of the mod ── -->
+  <ItemGroup>
+    <Compile Remove="tools\**" />
+    <EmbeddedResource Remove="tools\**" />
+    <None Remove="tools\**" />
+    <Compile Remove="history\**" />
+    <None Remove="history\**" />
+  </ItemGroup>
+
+  <!-- ── Auto-copy DLL to plugins on build ────────────────────────────── -->
+  <!-- Release builds for the auto-updater are made with -p:SkipDeploy=true so they do NOT land in the game folder (the installed mod must update itself). -->
+  <Target Name="CopyToPlugins" AfterTargets="Build" Condition="'$(SkipDeploy)' != 'true'">
+    <MakeDir Directories="$(PluginsDir)" />
+    <Copy
+      SourceFiles="$(OutputPath)$(AssemblyName).dll"
+      DestinationFolder="$(PluginsDir)"
+      SkipUnchangedFiles="false" />
+    <!-- Recalled's recorded music (converted wavs) goes in Sounds\ next to the DLL. -->
+    <ItemGroup>
+      <RecalledSounds Include="Sounds\*.wav" />
+    </ItemGroup>
+    <Copy
+      SourceFiles="@(RecalledSounds)"
+      DestinationFolder="$(PluginsDir)Sounds"
+      SkipUnchangedFiles="true"
+      Condition="'@(RecalledSounds)' != ''" />
+  </Target>
+
+</Project>

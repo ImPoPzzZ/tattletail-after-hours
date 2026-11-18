@@ -1,0 +1,370 @@
+<title>Recalled: The Town</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@75..125,500;75..125,700;75..125,900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a recall notice pinned over a night map. One reading column; the map is the hero and gets the full width. */
+:root {
+  --bg: #f4f1ea;
+  --surface: #fffdf8;
+  --fg: #1b1d24;
+  --muted: #5d6170;
+  --line: #ddd6c6;
+  --tape: #e0a100;            /* recall-notice amber */
+  --tape-ink: #1b1d24;
+  --danger: #b3261e;
+  --night: #1f2a44;           /* the map's ground */
+  --night-2: #2a3758;
+  --map-ink: #e9edf7;
+  --map-dim: #9aa6c4;
+  --road: #55628a;
+  --lit: #f3cf6b;
+  --z-sub: #4f9d69;
+  --z-mall: #4a90c2;
+  --z-school: #b0783f;
+  --z-junk: #a25a8f;
+  --z-ware: #c0504d;
+  --z-park: #3f7a52;
+  --font-display: "Archivo", "Arial Narrow", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12141b; --surface: #1a1d27; --fg: #e9eaf0; --muted: #a0a5b8; --line: #2b2f3d;
+    --tape: #f0b52e; --tape-ink: #14151a; --danger: #ff6f61;
+    --night: #0e1424; --night-2: #172038; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12141b; --surface: #1a1d27; --fg: #e9eaf0; --muted: #a0a5b8; --line: #2b2f3d;
+  --tape: #f0b52e; --tape-ink: #14151a; --danger: #ff6f61;
+  --night: #0e1424; --night-2: #172038; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 17px; line-height: 1.6; }
+.page { max-width: 980px; margin: 0 auto; padding-inline: 20px; padding-block: 28px 80px; }
+a { color: inherit; }
+
+.tape { background: repeating-linear-gradient(-45deg, var(--tape) 0 18px, var(--tape-ink) 18px 36px); height: 10px; border-radius: 2px; }
+.eyebrow { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 18px 0 6px; }
+h1 { font-family: var(--font-display); font-stretch: 80%; font-weight: 900; font-size: clamp(44px, 8vw, 84px); line-height: .95; letter-spacing: -.01em; text-transform: uppercase; margin: 0 0 10px; }
+h1 span { display: block; font-size: .42em; font-stretch: 100%; font-weight: 700; letter-spacing: .02em; color: var(--muted); margin-top: 8px; }
+.lede { font-size: 19px; max-width: 62ch; margin: 0 0 18px; }
+.key { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 14.5px; color: var(--muted); margin: 0 0 22px; }
+.tag { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; font-weight: 600; white-space: nowrap; }
+.tag.d { background: var(--tape); color: var(--tape-ink); }
+.tag.p { border: 1px solid var(--muted); color: var(--muted); }
+
+h2 { font-family: var(--font-display); font-stretch: 85%; font-weight: 900; font-size: 32px; line-height: 1.05; text-transform: uppercase; margin: 56px 0 12px; display: flex; flex-wrap: wrap; gap: 10px 14px; align-items: center; text-wrap: balance; }
+h3 { font-family: var(--font-display); font-weight: 700; font-size: 20px; margin: 26px 0 8px; }
+p, ul { margin: 0 0 14px; max-width: 70ch; }
+ul { padding-left: 1.25em; }
+li { margin-bottom: 6px; }
+code { font-family: var(--font-mono); font-size: .86em; }
+
+figure { margin: 0 0 10px; }
+figcaption { font-size: 14px; color: var(--muted); margin-top: 8px; max-width: 70ch; }
+.map { background: var(--night); border-radius: 14px; padding: 10px; overflow-x: auto; }
+.map svg { display: block; min-width: 640px; width: 100%; height: auto; }
+.map text { font-family: var(--font-mono); fill: var(--map-ink); }
+.map .dim { fill: var(--map-dim); }
+.legend { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 6px 18px; font-size: 14.5px; margin: 12px 0 0; padding: 0; list-style: none; }
+.legend li { display: flex; gap: 9px; align-items: center; margin: 0; }
+.sw { width: 22px; height: 12px; border-radius: 3px; flex: none; }
+
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; background: var(--surface); margin: 0 0 18px; }
+table { border-collapse: collapse; width: 100%; font-size: 15px; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { font-family: var(--font-mono); font-size: 11.5px; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+tr:last-child td { border-bottom: 0; }
+td.n { font-family: var(--font-mono); font-size: 13.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+.zone { border: 1px solid var(--line); border-left: 8px solid var(--zc, var(--tape)); background: var(--surface); border-radius: 10px; padding: 18px 20px 8px; margin: 0 0 18px; }
+.zone h3 { margin-top: 0; font-size: 24px; font-stretch: 85%; font-weight: 900; text-transform: uppercase; display: flex; flex-wrap: wrap; gap: 8px 12px; align-items: baseline; }
+.zone h3 small { font-family: var(--font-mono); font-size: 12.5px; font-weight: 600; letter-spacing: .06em; color: var(--muted); text-transform: uppercase; }
+.facts { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 4px 22px; margin: 0 0 12px; }
+.facts div { min-width: 0; }
+.facts dt { font-family: var(--font-mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin-top: 8px; }
+.facts dd { margin: 0; }
+.foot { margin-top: 60px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--muted); font-size: 14.5px; }
+</style>
+
+<div class="page">
+  <div class="tape" aria-hidden="true"></div>
+  <div class="eyebrow">Recalled &middot; World 1 &middot; playable area design &middot; nothing here is built yet</div>
+  <h1>The Town <span>Where Recalled happens: the map, the zones, and the way through them</span></h1>
+  <p class="lede">World 1 is one town at night, taken over by recalled toys. The treehouse sits in the middle. Five zones surround it, each harder than the last, ending at the Waygetter warehouse and Mama.</p>
+  <div class="key">
+    <span><span class="tag d">Decided</span> ImPoPzzZ has said so</span>
+    <span><span class="tag p">Proposed</span> my suggestion, change anything</span>
+    <span>Made By: ImPoPzzZ &amp; Sa1monfr</span>
+  </div>
+
+  <figure>
+    <div class="map">
+      <svg viewBox="0 0 760 610" role="img" aria-label="Top-down map of the town. The park and treehouse are in the middle. The suburbs are to the south-west, the Arcade on Main Street in the south, the school to the west, the mall to the east, the junkyard to the north-east past the rail tracks, and the Waygetter warehouse to the north.">
+        <!-- ground -->
+        <rect x="0" y="0" width="760" height="610" rx="8" fill="var(--night)"/>
+        <!-- the quarantine fence -->
+        <rect x="14" y="14" width="732" height="582" rx="10" fill="none" stroke="var(--tape)" stroke-width="2" stroke-dasharray="10 7"/>
+        <text x="28" y="36" font-size="11" class="dim">RECALL ZONE FENCE</text>
+
+        <!-- zones -->
+        <rect x="250" y="44" width="250" height="112" rx="10" fill="var(--z-ware)" fill-opacity=".38" stroke="var(--z-ware)" stroke-width="2"/>
+        <rect x="548" y="70" width="180" height="176" rx="10" fill="var(--z-junk)" fill-opacity=".38" stroke="var(--z-junk)" stroke-width="2"/>
+        <rect x="34" y="200" width="196" height="180" rx="10" fill="var(--z-school)" fill-opacity=".38" stroke="var(--z-school)" stroke-width="2"/>
+        <rect x="548" y="296" width="180" height="190" rx="10" fill="var(--z-mall)" fill-opacity=".38" stroke="var(--z-mall)" stroke-width="2"/>
+        <rect x="96" y="414" width="262" height="160" rx="10" fill="var(--z-sub)" fill-opacity=".38" stroke="var(--z-sub)" stroke-width="2"/>
+        <circle cx="380" cy="300" r="62" fill="var(--z-park)" fill-opacity=".5" stroke="var(--z-park)" stroke-width="2"/>
+
+        <!-- rail tracks -->
+        <path d="M522 20 L522 262 Q522 286 546 286 L744 286" fill="none" stroke="var(--map-dim)" stroke-width="5" stroke-dasharray="3 6"/>
+        <text x="600" y="280" font-size="10" class="dim">RAIL TRACKS</text>
+
+        <!-- roads (lit) -->
+        <g stroke="var(--road)" stroke-width="12" stroke-linecap="round" fill="none">
+          <path d="M380 582 L380 362"/>
+          <path d="M380 238 L380 156"/>
+          <path d="M230 300 L318 300"/>
+          <path d="M442 300 L548 340"/>
+          <path d="M380 196 L548 170"/>
+          <path d="M358 470 L380 470"/>
+        </g>
+        <g stroke="var(--lit)" stroke-width="1.5" stroke-dasharray="2 9" stroke-linecap="round" fill="none">
+          <path d="M380 582 L380 362"/>
+          <path d="M380 238 L380 156"/>
+          <path d="M230 300 L318 300"/>
+          <path d="M442 300 L548 340"/>
+          <path d="M380 196 L548 170"/>
+        </g>
+        <text x="388" y="396" font-size="10" class="dim">MAIN STREET</text>
+
+        <!-- ziplines from the treehouse to each fort -->
+        <g stroke="var(--tape)" stroke-width="1.4" stroke-dasharray="1 5" stroke-linecap="round">
+          <line x1="380" y1="300" x2="232" y2="476"/>
+          <line x1="380" y1="300" x2="624" y2="398"/>
+          <line x1="380" y1="300" x2="136" y2="262"/>
+          <line x1="380" y1="300" x2="610" y2="196"/>
+        </g>
+
+        <!-- gates -->
+        <g font-size="10" font-weight="600">
+          <g><rect x="364" y="404" width="32" height="15" rx="3" fill="var(--tape)"/><text x="380" y="415" text-anchor="middle" style="fill:var(--tape-ink)">LV 1</text></g>
+          <g><rect x="486" y="310" width="32" height="15" rx="3" fill="var(--tape)"/><text x="502" y="321" text-anchor="middle" style="fill:var(--tape-ink)">LV 4</text></g>
+          <g><rect x="252" y="292" width="32" height="15" rx="3" fill="var(--tape)"/><text x="268" y="303" text-anchor="middle" style="fill:var(--tape-ink)">LV 7</text></g>
+          <g><rect x="470" y="172" width="38" height="15" rx="3" fill="var(--tape)"/><text x="489" y="183" text-anchor="middle" style="fill:var(--tape-ink)">LV 10</text></g>
+          <g><rect x="361" y="160" width="38" height="15" rx="3" fill="var(--tape)"/><text x="380" y="171" text-anchor="middle" style="fill:var(--tape-ink)">LV 13</text></g>
+        </g>
+
+        <!-- forts -->
+        <g fill="var(--tape)" stroke="var(--night)" stroke-width="1.5">
+          <rect x="226" y="470" width="12" height="12" transform="rotate(45 232 476)"/>
+          <rect x="618" y="392" width="12" height="12" transform="rotate(45 624 398)"/>
+          <rect x="130" y="256" width="12" height="12" transform="rotate(45 136 262)"/>
+          <rect x="604" y="190" width="12" height="12" transform="rotate(45 610 196)"/>
+        </g>
+
+        <!-- boss arenas -->
+        <g fill="none" stroke="var(--danger)" stroke-width="2.5">
+          <circle cx="138" cy="536" r="13"/><circle cx="676" cy="446" r="13"/><circle cx="76" cy="340" r="13"/><circle cx="690" cy="112" r="13"/><circle cx="376" cy="78" r="13"/>
+        </g>
+        <g font-size="10" text-anchor="middle" font-weight="600" style="fill:var(--danger)">
+          <text x="138" y="540" style="fill:var(--danger)">B</text><text x="676" y="450" style="fill:var(--danger)">B</text><text x="76" y="344" style="fill:var(--danger)">B</text><text x="690" y="116" style="fill:var(--danger)">B</text><text x="376" y="82" style="fill:var(--danger)">B</text>
+        </g>
+
+        <!-- the Arcade -->
+        <rect x="392" y="520" width="52" height="30" rx="4" fill="var(--map-ink)"/>
+        <text x="418" y="539" font-size="10" text-anchor="middle" font-weight="600" style="fill:var(--night)">ARCADE</text>
+        <text x="452" y="533" font-size="10" class="dim">you arrive here</text>
+
+        <!-- treehouse -->
+        <circle cx="380" cy="300" r="15" fill="var(--lit)"/>
+        <text x="380" y="284" font-size="11" text-anchor="middle" font-weight="600" dy="-8">THE TREEHOUSE</text>
+        <text x="380" y="340" font-size="10" text-anchor="middle" class="dim">the park &middot; safe</text>
+
+        <!-- labels -->
+        <g font-size="13" font-weight="600">
+          <text x="262" y="66">WAYGETTER WAREHOUSE</text>
+          <text x="560" y="92">JUNKYARD</text>
+          <text x="46" y="222">SCHOOL</text>
+          <text x="560" y="318">MALL</text>
+          <text x="108" y="436">SUBURBS</text>
+        </g>
+        <g font-size="10.5" class="dim">
+          <text x="262" y="82" class="dim">levels 13&ndash;15 &middot; Mama</text>
+          <text x="560" y="108" class="dim">levels 10&ndash;13 &middot; Papa</text>
+          <text x="46" y="238" class="dim">levels 7&ndash;10</text>
+          <text x="560" y="334" class="dim">levels 4&ndash;7</text>
+          <text x="108" y="452" class="dim">levels 1&ndash;4</text>
+          <text x="262" y="142" class="dim">smokestack, red light</text>
+          <text x="560" y="232" class="dim">crane</text>
+          <text x="46" y="368" class="dim">clock tower</text>
+          <text x="560" y="474" class="dim">mall sign</text>
+          <text x="262" y="562" class="dim">water tower</text>
+        </g>
+
+        <!-- the road out -->
+        <path d="M444 560 L640 560" stroke="var(--road)" stroke-width="8" stroke-linecap="round" stroke-dasharray="14 8"/>
+        <text x="470" y="582" font-size="10" class="dim">ROAD OUT OF TOWN &middot; closed (later worlds)</text>
+
+        <!-- compass and scale -->
+        <g transform="translate(704 548)">
+          <path d="M0 -20 L7 6 L0 1 L-7 6 Z" fill="var(--map-ink)"/>
+          <text x="0" y="-26" font-size="11" text-anchor="middle" font-weight="600">N</text>
+        </g>
+        <g transform="translate(36 582)">
+          <line x1="0" y1="0" x2="131" y2="0" stroke="var(--map-ink)" stroke-width="2"/>
+          <line x1="0" y1="-4" x2="0" y2="4" stroke="var(--map-ink)" stroke-width="2"/>
+          <line x1="131" y1="-4" x2="131" y2="4" stroke="var(--map-ink)" stroke-width="2"/>
+          <text x="65" y="-7" font-size="10" text-anchor="middle">100 m</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>A schematic, not a blueprint: it shows where things are and how they connect. The whole town is about 560 m by 450 m, a little over two minutes to run across.</figcaption>
+  </figure>
+  <ul class="legend">
+    <li><span class="sw" style="background:var(--lit)"></span>Treehouse (safe hub)</li>
+    <li><span class="sw" style="background:var(--road)"></span>Lit streets</li>
+    <li><span class="sw" style="background:var(--tape)"></span>Level gates, forts, ziplines</li>
+    <li><span class="sw" style="border:2.5px solid var(--danger); border-radius:50%; width:14px; height:14px"></span>Boss arena</li>
+    <li><span class="sw" style="background:var(--map-dim)"></span>Rail tracks</li>
+    <li><span class="sw" style="background:var(--map-ink); border:1px solid var(--line)"></span>The Arcade (your way in)</li>
+  </ul>
+
+  <h2>How the town works <span class="tag p">Proposed</span></h2>
+  <p>Already decided and built into this layout: World 1 is the whole town, the hideout is a treehouse, the streets are lit and the side streets and buildings are dark, the level cap is 15, Papa is the junkyard's boss and Mama is the last one. Everything below is how I'd arrange that.</p>
+  <ul>
+    <li><strong>A wheel, with the treehouse at the hub.</strong> Every zone is a short walk from the park, so getting back to craft, stash and regroup is never a long trip, and friends at different points can meet in the middle.</li>
+    <li><strong>You arrive on Main Street.</strong> The door in the Arcade opens onto the south end of Main Street. The Arcade is a building in the town. The treehouse is a one-minute walk north, and the suburbs are right beside you.</li>
+    <li><strong>Lit means safer, dark means loot.</strong> Street lamps line the main roads between zones. Toys keep off them more. The good scrap, the quest objectives and the elites are in the dark: backyards, shop floors, corridors, basements.</li>
+    <li><strong>A landmark for every zone.</strong> The water tower, the mall sign, the school's clock tower, the junkyard crane and the warehouse smokestack with its red light are visible from almost anywhere, so you can find your way without a minimap.</li>
+    <li><strong>Level gates.</strong> Each zone's entrance is a barricade the kids built. It opens for you at the zone's level, once you've beaten the boss before it.</li>
+    <li><strong>Forts and ziplines.</strong> Clearing a zone's first area lets the kids build a small fort there: a lit checkpoint where you can be revived to, and a zipline back to the treehouse and out again. It cuts the walking once a zone is familiar.</li>
+    <li><strong>The edge.</strong> A quarantine fence with recall-notice tape surrounds the town. Beyond it is fog. One road leads out, and it's closed: that's where later worlds go.</li>
+  </ul>
+
+  <h2>The way through <span class="tag d">Order and levels decided</span></h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Step</th><th>Zone</th><th>Levels</th><th>The gate opens when</th><th>Boss</th></tr></thead>
+    <tbody>
+      <tr><td class="n">0</td><td>The treehouse</td><td class="n">any</td><td>Always open</td><td>None. Safe.</td></tr>
+      <tr><td class="n">1</td><td>The suburbs</td><td class="n">1&ndash;4</td><td>From the start</td><td>Patches <span class="tag p">Proposed</span></td></tr>
+      <tr><td class="n">2</td><td>The mall</td><td class="n">4&ndash;7</td><td>Level 4, Patches beaten</td><td>The Display Model <span class="tag p">Proposed</span></td></tr>
+      <tr><td class="n">3</td><td>The school</td><td class="n">7&ndash;10</td><td>Level 7, the mall's boss beaten</td><td>The Hall Monitor <span class="tag p">Proposed</span></td></tr>
+      <tr><td class="n">4</td><td>The junkyard</td><td class="n">10&ndash;13</td><td>Level 10, the school's boss beaten</td><td>Papa <span class="tag d">Decided</span></td></tr>
+      <tr><td class="n">5</td><td>The Waygetter warehouse</td><td class="n">13&ndash;15</td><td>Level 13, Papa beaten</td><td>Mama <span class="tag d">Decided</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>The treehouse <span class="tag d">Decided: a treehouse</span></h2>
+  <p>A huge old oak in the middle of the town park, with platforms built around the trunk. It's the only warm light in town. Toys can't climb it, and that's the whole reason the kids are still here. Everything about it below is proposed.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Platform</th><th>What's there</th></tr></thead>
+    <tbody>
+      <tr><td>The ground, under the tree</td><td>A rope ladder up, a ring of lanterns, the paths to the four streets. You arrive here from the zipline.</td></tr>
+      <tr><td>Lower deck</td><td>The crafting benches and the quest board. The kids who give quests sit here.</td></tr>
+      <tr><td>Middle deck</td><td>Your stash (100 slots, safe when you die) and the trading table.</td></tr>
+      <tr><td>Zipline deck</td><td>Four lines, one to each zone's fort. A line appears when its fort is built.</td></tr>
+      <tr><td>The lookout</td><td>The top. You can see every landmark from here, and the warehouse's red light.</td></tr>
+    </tbody>
+  </table></div>
+  <p>The park around it (about 90 m across) is open grass with a few benches, a dry fountain and a bandstand. Nothing spawns inside the park.</p>
+
+  <h2>The zones <span class="tag p">Proposed</span></h2>
+
+  <div class="zone" style="--zc: var(--z-sub)">
+    <h3>The suburbs <small>levels 1&ndash;4 &middot; about 200 m by 120 m</small></h3>
+    <p>Three quiet streets of family houses, south-west of Main Street. Porch lights still on, toys left on lawns, a car with its door open. It teaches everything: light, noise, packs, your first elite, your first boss.</p>
+    <dl class="facts">
+      <div><dt>Areas</dt><dd>Maple Street (lit, the way in), the backyards (dark, fenced, loot), three houses you can enter, a garage row, the playground, the cul-de-sac under the water tower.</dd></div>
+      <div><dt>Enemies</dt><dd>Purple strays in packs of 3 to 4 on the lawns. Yellow ones in the backyards.</dd></div>
+      <div><dt>Elite</dt><dd>The jack-in-the-box: it hides in garages and boxes and springs when you're close.</dd></div>
+      <div><dt>Boss arena</dt><dd>The cul-de-sac. <strong>Patches</strong>: one huge Tattletail stitched together from many, in every color.</dd></div>
+      <div><dt>Materials</dt><dd>Springs, plastic, fur, screws.</dd></div>
+      <div><dt>Fort</dt><dd>The playground's climbing frame, fenced with planks.</dd></div>
+    </dl>
+  </div>
+
+  <div class="zone" style="--zc: var(--z-mall)">
+    <h3>The mall <small>levels 4&ndash;7 &middot; about 140 m by 145 m</small></h3>
+    <p>East of the park. A parking lot of abandoned cars, then two floors of dead shops around an atrium. The first big indoor space: long sight lines in the atrium, tight dark corridors behind the shops.</p>
+    <dl class="facts">
+      <div><dt>Areas</dt><dd>The parking lot (lit by the mall sign), the atrium with its stopped escalators, the food court, the toy store, the service corridors (pitch dark), the loading bay.</dd></div>
+      <div><dt>Enemies</dt><dd>Teal Tattletails in the shops. Yellow ones in the lot.</dd></div>
+      <div><dt>Elite</dt><dd>RC cars: they patrol the parking lot and the atrium floor, and ram.</dd></div>
+      <div><dt>Boss arena</dt><dd>The toy store. <strong>The Display Model</strong>: the giant Tattletail from the shop window, three meters tall.</dd></div>
+      <div><dt>Materials</dt><dd>Batteries, circuit boards, plastic, the first voice boxes.</dd></div>
+      <div><dt>Fort</dt><dd>The security booth at the parking lot's entrance.</dd></div>
+    </dl>
+  </div>
+
+  <div class="zone" style="--zc: var(--z-school)">
+    <h3>The school <small>levels 7&ndash;10 &middot; about 150 m by 140 m</small></h3>
+    <p>West of the park. The place every kid knows, turned wrong. Almost all indoors and almost all dark: this is the scariest zone before the warehouse.</p>
+    <dl class="facts">
+      <div><dt>Areas</dt><dd>The yard (lit), the locker halls, classrooms, the cafeteria, the library, the gym, the boiler room in the basement.</dd></div>
+      <div><dt>Enemies</dt><dd>Black and White Tattletails. They hide in lockers and under desks, and stay silent longer.</dd></div>
+      <div><dt>Elite</dt><dd>The robot: it walks the halls on a route and shoots on sight. You can learn its route and slip past.</dd></div>
+      <div><dt>Boss arena</dt><dd>The gym. <strong>The Hall Monitor</strong>: a tall robot made from several, with a searchlight.</dd></div>
+      <div><dt>Materials</dt><dd>Circuit boards, eyes, voice boxes, screws.</dd></div>
+      <div><dt>Fort</dt><dd>The bus shelter in the yard.</dd></div>
+    </dl>
+  </div>
+
+  <div class="zone" style="--zc: var(--z-junk)">
+    <h3>The junkyard <small>levels 10&ndash;13 &middot; about 140 m by 135 m</small></h3>
+    <p>North-east, across the rail tracks. A maze of stacked cars and scrap hills with no straight lines and almost no lamps. The best scrap in town is here, and so is Papa.</p>
+    <dl class="facts">
+      <div><dt>Areas</dt><dd>The rail crossing (the way in), the car stacks (a maze), the scrap hills, the crusher, the crane, Papa's den.</dd></div>
+      <div><dt>Enemies</dt><dd>Every color, in bigger packs. Gold Tattletails appear here as rare elites.</dd></div>
+      <div><dt>Elite</dt><dd>Fused toys: two or three of the earlier elites welded together.</dd></div>
+      <div><dt>Boss arena</dt><dd>The crusher pit, under the crane. <strong>Papa</strong>, on a throne of scrap.</dd></div>
+      <div><dt>Materials</dt><dd>All of them, in quantity, plus rare parts only found here.</dd></div>
+      <div><dt>Fort</dt><dd>The signal box at the rail crossing.</dd></div>
+    </dl>
+  </div>
+
+  <div class="zone" style="--zc: var(--z-ware)">
+    <h3>The Waygetter warehouse <small>levels 13&ndash;15 &middot; about 190 m by 85 m</small></h3>
+    <p>North, at the end of Main Street, behind the last gate. Where the recalled toys were brought to be destroyed, and where they weren't. No fort and no zipline: you walk in from the gate every time.</p>
+    <dl class="facts">
+      <div><dt>Areas</dt><dd>The loading docks, the shelving canyon (aisles of boxed toys, three stories high), the conveyor hall, the recall line, the offices, Mama's chamber.</dd></div>
+      <div><dt>Enemies</dt><dd>The toughest of every color. Diamond Tattletails appear here as rare elites.</dd></div>
+      <div><dt>Before the fight</dt><dd>Mama hunts you through the building. You can't hurt her yet: you hear her, and you hide.</dd></div>
+      <div><dt>Boss arena</dt><dd>Mama's chamber, at the far end. <strong>Mama</strong>. Beating her at level 15 ends World 1.</dd></div>
+      <div><dt>Materials</dt><dd>The rarest parts, for the best gear in World 1.</dd></div>
+      <div><dt>Built from</dt><dd>The Waygetter Facility that already exists in the mod (three floors, decay and all) can be the inside of this building.</dd></div>
+    </dl>
+  </div>
+
+  <h2>Building it <span class="tag p">Proposed</span></h2>
+  <ul>
+    <li><strong>Built in code, like everything else.</strong> The town goes at its own height in the world, far from the house, the Arcade (y 400), the beach (y 300) and the factory (y 200). Positions come from marks placed with the E tool.</li>
+    <li><strong>One zone at a time in memory.</strong> The whole town is too much to keep built at once on a 2016 engine. The park and the streets are always there; a zone's buildings, props and enemies are built when you approach its gate and removed when you're far away. Fog hides the distance.</li>
+    <li><strong>Few real interiors.</strong> Most houses and shops are fronts. Each zone has a handful of buildings you can enter, and those are where the design effort goes.</li>
+    <li><strong>The slice first.</strong> The first thing to build is the smallest playable piece of this map: the Arcade door, Main Street, the park and treehouse, and the suburbs up to Patches.</li>
+  </ul>
+  <div class="tbl"><table>
+    <thead><tr><th>Area</th><th>Size</th><th>Buildings you can enter</th><th>Enemies alive at once</th></tr></thead>
+    <tbody>
+      <tr><td>Park and treehouse</td><td class="n">90 m across</td><td class="n">1 (the tree)</td><td class="n">0</td></tr>
+      <tr><td>Suburbs</td><td class="n">200 &times; 120 m</td><td class="n">3 houses, garages</td><td class="n">up to 12</td></tr>
+      <tr><td>Mall</td><td class="n">140 &times; 145 m</td><td class="n">1, two floors</td><td class="n">up to 16</td></tr>
+      <tr><td>School</td><td class="n">150 &times; 140 m</td><td class="n">1, two floors and a basement</td><td class="n">up to 16</td></tr>
+      <tr><td>Junkyard</td><td class="n">140 &times; 135 m</td><td class="n">2 (the crusher, the den)</td><td class="n">up to 20</td></tr>
+      <tr><td>Warehouse</td><td class="n">190 &times; 85 m</td><td class="n">1, three floors</td><td class="n">up to 20</td></tr>
+    </tbody>
+  </table></div>
+  <p>The enemy counts are limits for performance, before scaling for more players: Tattletail fur is expensive to draw, so how many are alive near you has to be capped and tested on a slow PC.</p>
+
+  <h2>Still open</h2>
+  <ul>
+    <li>The bosses' names and designs for the suburbs, the mall and the school (Patches, the Display Model and the Hall Monitor are placeholders).</li>
+    <li>Whether there's a map you can open (a kid's hand-drawn one would suit it), or only the landmarks.</li>
+    <li>Whether the forts also sell or store anything, or are only checkpoints and ziplines.</li>
+    <li>Where the road out of town leads, for later worlds.</li>
+  </ul>
+
+  <p class="foot">Recalled, World 1. A companion to <code>docs/RECALLED_DESIGN.md</code>. Made By: ImPoPzzZ &amp; Sa1monfr.</p>
+</div>

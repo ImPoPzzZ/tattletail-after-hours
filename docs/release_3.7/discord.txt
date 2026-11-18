@@ -1,0 +1,18 @@
+@everyone
+**TATTLETAIL: AFTER HOURS 3.7 - THE PROFILE UPDATE is out!**
+
+Endless now has a profile: pick two of 34 traits before a run.
+
+**WHAT'S NEW**
+- 34 psychological traits, each with a bonus and a price (Paranoid, Lone Wolf, Fearless, Methodical, Persistent Dread...)
+- Traits never earn extra shards: they change how the run plays
+- Your two picks give you a title, and some pairs are named combos
+- The profile screen is drawn as Waygetter's file on you: slot cards, steady traits in green, conditions in orange
+- A heartbeat when Mama is near, whispers, phantom Mamas, a skip key, and more
+- A taller setup screen with a Profile row
+
+Includes everything from 3.6. Everyone needs 3.7 to play together.
+Download: https://impopzzz.itch.io/tattletail-after-hours
+Run the installer and it updates in one click. Your progress is safe.
+
+Made By: ImPoPzzZ & Sa1monfr

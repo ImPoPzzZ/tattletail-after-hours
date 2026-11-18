@@ -1,0 +1,31 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- The updater: a BepInEx preloader patcher. It runs before any plugin loads and swaps in an update the mod has downloaded and
+       staged (BepInEx\AfterHoursUpdate), because Windows will not let a running DLL be replaced. Built into BepInEx\patchers.
+       It shares src\UpdateCore.cs (manifest, signature, hashes, path safety) with the mod. -->
+  <PropertyGroup>
+    <TargetFramework>net46</TargetFramework>
+    <AssemblyName>AfterHoursUpdater</AssemblyName>
+    <RootNamespace>AfterHoursUpdater</RootNamespace>
+    <LangVersion>7.3</LangVersion>
+    <GameRoot>D:\SteamLibrary\steamapps\common\Tattletail</GameRoot>
+    <BepInExCore>$(GameRoot)\BepInEx\core</BepInExCore>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Mono.Cecil">
+      <HintPath>$(BepInExCore)\Mono.Cecil.dll</HintPath>
+      <Private>false</Private>
+    </Reference>
+    <Compile Include="..\..\src\UpdateCore.cs" Link="UpdateCore.cs" />
+    <Compile Include="..\..\src\UpdateKey.cs" Link="UpdateKey.cs" />
+  </ItemGroup>
+
+  <!-- Copied into the game folder like the mod is (not with -p:SkipDeploy=true). -->
+  <Target Name="CopyUpdater" AfterTargets="Build" Condition="'$(SkipDeploy)' != 'true'">
+    <MakeDir Directories="$(GameRoot)\BepInEx\patchers" />
+    <Copy SourceFiles="$(OutputPath)$(AssemblyName).dll" DestinationFolder="$(GameRoot)\BepInEx\patchers" SkipUnchangedFiles="false" />
+  </Target>
+
+</Project>
